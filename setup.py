@@ -13,4 +13,5 @@ setup(name='pyarxiv',
       author_email='c@culshoefer.com',
       packages=find_packages(),
       url='https://github.com/culshoefer/pyarxiv/',
-      test_suite='tests',
+      test_suite='tests'
+      )

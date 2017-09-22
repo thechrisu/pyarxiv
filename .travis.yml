@@ -1,0 +1,24 @@
+language: python
+sudo: false
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.6-dev"
+  - "3.7-dev"
+  - "nightly"
+cache:
+  directories:
+    - .pip_download_cache
+env:
+  global:
+    - PIP_DOWNLOAD_CACHE=".pip_download_cache"
+install:
+  - pip install -r requirements.txt
+  - pip install -r requirements.dev.txt
+script:
+  - py.test tests --doctest-modules --pep8 -v --cov-report term-missing --cov=pyarxiv
+after_success:
+  - coveralls

@@ -1,4 +1,6 @@
 -r requirements.txt
-coverage
-pylint
+coveralls
 responses
+pytest
+pytest-pep8
+pytest-cov
