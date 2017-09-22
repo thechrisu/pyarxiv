@@ -45,20 +45,33 @@ def fix_str_whitespace(string):
     return re.sub(r'^\s|\s$', '', spaces_fixed)
 
 
-def get_arxiv_id(url_or_id):
+def get_arxiv_id(url_or_id_or_entry):
     """
     Given an url or an article stub, parse its id and version.
     Examples:
     get_arxiv_id('1709.1234v1') -> ('1709.1234', '1')
     get_arxiv_id('1709.1234') -> ('1709.1234', None)
-    :param url_or_id: string of url or id of entry
-    :return: (str: arxiv id, str: version)
+    :param url_or_id_or_entry: string of url
+    or id of entry (still str)
+    or dict, possibly with 'id' key
+    :return: (str: arxiv id, str: version),
+    or None, None if no valid input
     """
-    i = url_or_id.rfind('abs/')
-    if i != -1:
-        id_version = url_or_id[i + 4:]
+    elem = None
+    if isinstance(url_or_id_or_entry, str):
+        elem = url_or_id_or_entry
     else:
-        id_version = url_or_id
+        if isinstance(url_or_id_or_entry, dict) \
+                and 'id' in url_or_id_or_entry \
+                and isinstance(url_or_id_or_entry['id'], str):
+            elem = url_or_id_or_entry['id']
+    if elem is None:
+        return None, None
+    i = elem.rfind('abs/')
+    if i != -1:
+        id_version = elem[i + 4:]
+    else:
+        id_version = elem
     id_v_parts = id_version.split('v')
     if len(id_v_parts) > 1:
         return id_v_parts[0], id_v_parts[1]
@@ -69,7 +82,8 @@ def get_arxiv_id(url_or_id):
 def uses_new_id(url_or_id):
     """
     Read about it here https://arxiv.org/help/arxiv_identifier
-    :param url_or_id: string containing id or full url of arxiv entry
+    :param url_or_id: string containing id
+    or full url of arxiv entry
     :return: bool: whether the id is a new type
     """
     id_version = "" + url_or_id.split('/')[-1]

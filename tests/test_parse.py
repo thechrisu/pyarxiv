@@ -118,6 +118,17 @@ class TestGetId(unittest.TestCase):
         self.assertEqual(pap.get_arxiv_id('cs/9808001v1'),
                          ('cs/9808001', '1'))
 
+    def test_other_types(self):
+        self.assertEqual(pap.get_arxiv_id(3), (None, None))
+        self.assertEqual(pap.get_arxiv_id(''), ('', None))
+        self.assertEqual(pap.get_arxiv_id(' '), (' ', None))
+        self.assertEqual(pap.get_arxiv_id({}), (None, None))
+        self.assertEqual(pap.get_arxiv_id(None), (None, None))
+        self.assertEqual(pap.get_arxiv_id(['id']), (None, None))
+        self.assertEqual(pap.get_arxiv_id({'id': None}), (None, None))
+        self.assertEqual(pap.get_arxiv_id({'id': ''}), ('', None))
+        self.assertEqual(pap.get_arxiv_id({'id': 3}), (None, None))
+
 
 if __name__ == "__main__":
     unittest.main()
