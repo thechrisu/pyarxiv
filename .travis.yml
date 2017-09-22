@@ -22,3 +22,6 @@ script:
   - py.test tests --doctest-modules --pep8 -v --cov-report term-missing --cov=pyarxiv
 after_success:
   - coveralls
+
+notifications:
+  email: false
