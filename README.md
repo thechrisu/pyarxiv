@@ -10,4 +10,4 @@ TODO
 ## Features
 - Query the arXiv API (atom feed) in your code
 - Download papers in your code, as PDF or in other formats
-- Do the above in the commandline
+TODO - Do the above in the commandline
