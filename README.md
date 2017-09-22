@@ -1,4 +1,4 @@
-[![buildstatus](https://travis-ci.org/culshoefer/pyarxiv.svg?token=zQVzEtnHpKj7VnQb2PQK&branch=master)](https://travis-ci.org/culshoefer/pyarxiv)
+[![buildstatus](https://travis-ci.org/culshoefer/pyarxiv.svg?branch=master)](https://travis-ci.org/culshoefer/pyarxiv)
 # PyArXiv
 
 PyArXiv is a wrapper for the API of [Cornell University's famous repository](arxiv.org) for scientific papers and the like.
