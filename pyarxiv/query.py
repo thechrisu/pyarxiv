@@ -1,10 +1,11 @@
 import sys
-from urllib import request
 
 if sys.version_info < (3, 0):
-    import urllib as parse
+    import urllib as parse  # oh god, hopefully this goes well
+    import urllib as request
 else:
     from urllib import parse
+    from urllib import request
 
 import feedparser
 

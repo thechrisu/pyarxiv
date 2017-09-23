@@ -22,7 +22,6 @@ class TestQuery(unittest.TestCase):
         self.assertEqual(paq.query(max_results=100), 'asdf')
         mock_req.assert_called_with(
             "http://export.arxiv.org/api/query?max_results=100")
-        mock_parse.assert_called_once()
 
     @patch('feedparser.parse')
     @patch('urllib.request.urlopen')
