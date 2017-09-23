@@ -1,5 +1,11 @@
-from urllib import parse
+import sys
 from urllib import request
+
+if sys.version_info < (3, 0):
+    import urllib as parse
+else:
+    from urllib import parse
+
 import feedparser
 
 ARXIV_API_BASE_URI = 'http://export.arxiv.org/api/query?'
