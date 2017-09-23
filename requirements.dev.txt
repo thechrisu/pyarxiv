@@ -4,4 +4,4 @@ responses
 pytest
 pytest-pep8
 pytest-cov
-mock: python_version < '3.3'
+mock; python_version < '3.3'
