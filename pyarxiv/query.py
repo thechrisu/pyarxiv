@@ -1,11 +1,11 @@
 import sys
 
 if sys.version_info < (3, 0):
-    import urllib as parse  # oh god, hopefully this goes well
-    import urllib as request
+    from urllib import quote_plus
+    from urllib import urlopen
 else:
-    from urllib import parse
-    from urllib import request
+    from urllib.parse import quote_plus
+    from urllib.request import urlopen
 
 import feedparser
 
@@ -45,7 +45,7 @@ def query(max_results=100, ids=[], categories=[],
         query += search_query
     if len(ids) > 0:
         query += "&id_list=" + ",".join(ids)
-    raw_d = request.urlopen(
+    raw_d = urlopen(
         ARXIV_API_BASE_URI + query).read()
     d = feedparser.parse(raw_d)
     return d.entries
@@ -76,4 +76,4 @@ def get_querystring(categories=[], title='', authors='',
     if len(journal_ref) > 0:
         query_elements.append("jr:\"" + journal_ref + "\"")
     built_query = " AND ".join(query_elements)
-    return parse.quote_plus(built_query, safe=':+')
+    return quote_plus(built_query, safe=':+')

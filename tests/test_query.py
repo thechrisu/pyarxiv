@@ -12,7 +12,7 @@ else:
 
 class TestQuery(unittest.TestCase):
     @patch('feedparser.parse')
-    @patch('urllib.request.urlopen')
+    @patch('pyarxiv.query.urlopen')
     def test_default(self,
                      mock_req,
                      mock_parse):
@@ -24,7 +24,7 @@ class TestQuery(unittest.TestCase):
             "http://export.arxiv.org/api/query?max_results=100")
 
     @patch('feedparser.parse')
-    @patch('urllib.request.urlopen')
+    @patch('pyarxiv.query.urlopen')
     def test_querystring_provided_overrides_others_except_for_id(self,
                                                                  mock_req,
                                                                  mock_parse):
@@ -37,7 +37,7 @@ class TestQuery(unittest.TestCase):
             "&search_query=somequerystring&id_list=1")
 
     @patch('feedparser.parse')
-    @patch('urllib.request.urlopen')
+    @patch('pyarxiv.query.urlopen')
     def test_id_string_comma_separated(self,
                                        mock_req,
                                        mock_parse):
@@ -47,7 +47,7 @@ class TestQuery(unittest.TestCase):
             "&id_list=1,2")
 
     @patch('feedparser.parse')
-    @patch('urllib.request.urlopen')
+    @patch('pyarxiv.query.urlopen')
     def test_max_results_always_there(self,
                                       mock_req,
                                       mock_parse):
