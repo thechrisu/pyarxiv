@@ -1,5 +1,8 @@
 -r requirements.txt
 coveralls
+lxml
+requests
+enum34; python_version < '3.4'
 responses
 pytest
 pytest-pep8
