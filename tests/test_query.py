@@ -1,5 +1,11 @@
 import unittest
-from unittest.mock import patch, Mock
+import sys
+
+if sys.version_info >= (3, 3):  # starting python 3.3
+    from unittest.mock import patch, Mock
+
+else:
+    from mock import patch, Mock
 
 import pyarxiv.query as paq
 
