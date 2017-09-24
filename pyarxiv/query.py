@@ -9,6 +9,8 @@ else:
 
 import feedparser
 
+from pyarxiv.arxiv_categories import ArxivCategory, arxiv_category_map
+
 ARXIV_API_BASE_URI = 'http://export.arxiv.org/api/query?'
 
 
@@ -64,8 +66,12 @@ def get_querystring(categories=[], title='', authors='',
     """
     query_elements = []
     if len(categories) > 0 and isinstance(categories, list):
+        str_categories = list(map(lambda x:
+                                  arxiv_category_map[x]
+                                  if isinstance(x, ArxivCategory)
+                                  else x, categories))
         used_categories = " OR ".join(
-            list(map(lambda x: 'cat:' + x, categories)))
+            list(map(lambda x: 'cat:' + x, str_categories)))
         query_elements.append("(" + used_categories + ")")
     if len(title) > 0:
         query_elements.append("ti:\"" + title + "\"")

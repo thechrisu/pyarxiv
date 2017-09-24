@@ -2,6 +2,7 @@ import unittest
 import sys
 
 import pyarxiv.query as paq
+from pyarxiv.arxiv_categories import ArxivCategory
 
 if sys.version_info >= (3, 3):  # starting python 3.3
     from unittest.mock import patch, Mock
@@ -67,6 +68,13 @@ class TestQueryConstruction(unittest.TestCase):
                          '%28cat:randomString%29')
         self.assertEqual(paq.get_querystring(['randcat', 'rand2']),
                          '%28cat:randcat+OR+cat:rand2%29')
+
+    def test_categories_converts_arxivcategories(self):
+        self.assertEqual(paq.get_querystring(['rand1',
+                                              ArxivCategory.cs_AI,
+                                              'otherRandomString']),
+                         '%28cat:rand1+OR+cat:cs.AI+OR+'
+                         'cat:otherRandomString%29')
 
     def test_title(self):
         self.assertEqual(paq.get_querystring(title=''), '')
