@@ -88,3 +88,7 @@ def uses_new_id(url_or_id):
     """
     id_version = "" + url_or_id.split('/')[-1]
     return id_version.rfind('.') != -1
+
+
+def make_filename_safe(filename):
+    return "".join([c if c.isalnum() or c in '.' else '_' for c in filename])

@@ -56,6 +56,12 @@ class TestQuery(unittest.TestCase):
         mock_req.assert_called_with(
             "http://export.arxiv.org/api/query?max_results=100")
 
+    @patch('pyarxiv.query.urlopen')
+    def test_wraps_exceptions_in_valueerror(self,
+                                            mock_req):
+        with self.assertRaises(ValueError):
+            paq.query(ids=['-1'])
+
 
 class TestQueryConstruction(unittest.TestCase):
     def test_empty(self):

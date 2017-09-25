@@ -47,10 +47,13 @@ def query(max_results=100, ids=[], categories=[],
         query += search_query
     if len(ids) > 0:
         query += "&id_list=" + ",".join(ids)
-    raw_d = urlopen(
-        ARXIV_API_BASE_URI + query).read()
-    d = feedparser.parse(raw_d)
-    return d.entries
+    try:
+        raw_d = urlopen(
+            ARXIV_API_BASE_URI + query).read()
+        d = feedparser.parse(raw_d)
+        return d.entries
+    except Exception as e:
+        raise ValueError('Unable to query paper with query: %s' % query) from e
 
 
 def get_querystring(categories=[], title='', authors='',
