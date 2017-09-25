@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-from pyarxiv.download import download_entry
+from pyarxiv.download import download_entry, download_entries
 
 if sys.version_info >= (3, 3):  # starting python 3.3
     from unittest.mock import patch, Mock
@@ -81,3 +81,34 @@ class TestDownloadEntry(unittest.TestCase):
         m_retrieve.assert_called_once_with(
             'https://arxiv.org/pdf/some id.pdf',
             './some_title.pdf')
+
+
+class TestDownloadMultipleEntries(unittest.TestCase):
+    @patch('pyarxiv.download.download_entry')
+    def test_proress_callback(self,
+                              m_download_entry):
+        def test_method_correctly_iterates(id_used, exception):
+            self.assertIsNone(exception)
+            self.assertIn(id_used, ['1', '2'])
+
+        self.assertListEqual(
+            download_entries(['1', '2'],
+                             progress_callback=test_method_correctly_iterates),
+            [])
+
+    @patch('pyarxiv.download.download_entry')
+    def test_exceptions_correctly_logged(self,
+                                         m_download_entry):
+        def side_effect(arg, arg2,
+                        use_title_for_filename=True,
+                        append_id=False):
+            if arg == 'yes':
+                raise ValueError
+        m_download_entry.side_effect = side_effect
+        self.assertEqual(
+            len(download_entries(['no', 'yes', 'no', 'yes', 'no'])),
+            2)
+
+
+if __name__ == "__main__":
+    unittest.main()

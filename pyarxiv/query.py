@@ -14,6 +14,12 @@ from pyarxiv.arxiv_categories import ArxivCategory, arxiv_category_map
 ARXIV_API_BASE_URI = 'http://export.arxiv.org/api/query?'
 
 
+class ArxivQueryError(Exception):
+    def __init__(self, message, cause):
+        super(ArxivQueryError, self).__init__(message + u', caused by ' + repr(cause))
+        self.cause = cause
+
+
 def query(max_results=100, ids=[], categories=[],
           title='', authors='', abstract='', journal_ref='',
           querystring=''):
@@ -53,7 +59,7 @@ def query(max_results=100, ids=[], categories=[],
         d = feedparser.parse(raw_d)
         return d.entries
     except Exception as e:
-        raise ValueError('Unable to query paper with query: %s' % query) from e
+        raise ArxivQueryError('Unable to query paper with query: %s' % query, e)
 
 
 def get_querystring(categories=[], title='', authors='',

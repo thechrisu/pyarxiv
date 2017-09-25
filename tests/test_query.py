@@ -59,7 +59,7 @@ class TestQuery(unittest.TestCase):
     @patch('pyarxiv.query.urlopen')
     def test_wraps_exceptions_in_valueerror(self,
                                             mock_req):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(paq.ArxivQueryError):
             paq.query(ids=['-1'])
 
 
