@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-import pyarxiv.query as paq
+import pyarxiv as paq
 from pyarxiv.arxiv_categories import ArxivCategory
 
 if sys.version_info >= (3, 3):  # starting python 3.3
@@ -13,7 +13,7 @@ else:
 
 class TestQuery(unittest.TestCase):
     @patch('feedparser.parse')
-    @patch('pyarxiv.query.urlopen')
+    @patch('pyarxiv.urlopen')
     def test_default(self,
                      mock_req,
                      mock_parse):
@@ -25,7 +25,7 @@ class TestQuery(unittest.TestCase):
             "http://export.arxiv.org/api/query?max_results=100")
 
     @patch('feedparser.parse')
-    @patch('pyarxiv.query.urlopen')
+    @patch('pyarxiv.urlopen')
     def test_querystring_provided_overrides_others_except_for_id(self,
                                                                  mock_req,
                                                                  mock_parse):
@@ -38,7 +38,7 @@ class TestQuery(unittest.TestCase):
             "&search_query=somequerystring&id_list=1")
 
     @patch('feedparser.parse')
-    @patch('pyarxiv.query.urlopen')
+    @patch('pyarxiv.urlopen')
     def test_id_string_comma_separated(self,
                                        mock_req,
                                        mock_parse):
@@ -48,7 +48,7 @@ class TestQuery(unittest.TestCase):
             "&id_list=1,2")
 
     @patch('feedparser.parse')
-    @patch('pyarxiv.query.urlopen')
+    @patch('pyarxiv.urlopen')
     def test_max_results_always_there(self,
                                       mock_req,
                                       mock_parse):
@@ -56,7 +56,7 @@ class TestQuery(unittest.TestCase):
         mock_req.assert_called_with(
             "http://export.arxiv.org/api/query?max_results=100")
 
-    @patch('pyarxiv.query.urlopen')
+    @patch('pyarxiv.urlopen')
     def test_wraps_exceptions_in_valueerror(self,
                                             mock_req):
         with self.assertRaises(paq.ArxivQueryError):

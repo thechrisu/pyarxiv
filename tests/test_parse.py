@@ -1,6 +1,6 @@
 import unittest
 
-import pyarxiv.parse as pap
+import pyarxiv as pap
 
 
 class TestNativeTypeConversion(unittest.TestCase):
