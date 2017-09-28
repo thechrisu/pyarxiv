@@ -9,7 +9,7 @@ TODO
 
 ## Features
 - Query the arXiv API (atom feed) in your code
-- Use enums for arXiv categories (TODO: Make query/dl compatible with this)
+- Use enums for arXiv categories
 - Download papers in your code as PDF
 
 TODO - Do the above in the commandline
