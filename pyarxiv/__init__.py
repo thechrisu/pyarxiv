@@ -24,9 +24,9 @@ else:
 
 def retrieve(url, file):
     if sys.version_info <= (3, 0):  # pragma: no-cover
-        urllib.retrieve(url, file)
+        urllib.urlretrieve(url, file)
     else:
-        urllib.requests.urlretrieve(url, file)
+        urllib.request.urlretrieve(url, file)
 
 
 class ArxivQueryError(Exception):
