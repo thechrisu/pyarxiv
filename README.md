@@ -11,4 +11,20 @@ TODO
 - Query the arXiv API (atom feed) in your code
 - Use enums for arXiv categories
 - Download papers in your code as PDF
-- Do the above in the commandline
+TODO - Do the above in the commandline
+
+## Usage
+
+### CLI
+```sh
+# will download a couple of papers with given ids to folder /home/user, name them according to their titles,
+# append their arxiv ids, and do not give progress feedback when each paper is downloaded
+pyarxiv-cli download 1703.00001 1703.00002v1 ... --target-folder=/home/user --use-title-for-filename --append-id --silent
+# Queries for papers with "Lorem" in them, maximally gets 5 papers (default 100), authors Einstein and Zweistein
+# Other potential arguments are --abstract, --journalref and manualmode with --querystring
+pyarxiv-cli query --title="Lorem" --max-results=5 --authors="A Einstein, B Zweistein"
+```
+
+### Python
+
+TODO
