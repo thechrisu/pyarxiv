@@ -10,9 +10,10 @@ setup(name='pyarxiv',
       install_requires=requirements,
       description='Python Client Library and CLI client for the ArXiv.org API',
       author='Christoph Ulshoefer',
+      license='MIT',
       author_email='c@culshoefer.com',
       packages=['pyarxiv'],
       url='https://github.com/culshoefer/pyarxiv/',
       scripts=['scripts/pyarxiv-cli'],
       test_suite='tests'
-      )
+)
