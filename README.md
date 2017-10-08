@@ -6,7 +6,9 @@ pyarxiv is a wrapper for the API of [Cornell University's famous repository](htt
 Supports Python 2.7, 3.3-3.6+
 
 ## Installation
-TODO
+```sh
+# TODO
+```
 
 ## Features
 - Query the arXiv API (atom feed) in your code
