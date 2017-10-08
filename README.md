@@ -18,6 +18,8 @@ TODO - Do the above in the commandline
 
 ### CLI
 ```sh
+pyarxiv-cli download -h
+pyarxiv-cli query -h
 # will download a couple of papers with given ids to folder /home/user, name them according to their titles,
 # append their arxiv ids, and do not give progress feedback when each paper is downloaded
 pyarxiv-cli download 1703.00001 1703.00002v1 ... --target-folder=/home/user --use-title-for-filename --append-id --silent
@@ -29,6 +31,10 @@ pyarxiv-cli download 1703.00001 1703.00002v1 ... --target-folder=/home/user --us
 pyarxiv-cli query --title="Lorem" --max-results=5 --authors="A Einstein, B Zweistein"
 ```
 
+You can also chain commands:
+```sh
+pyarxiv-cli download $(pyarxiv-cli query --title="WaveNet") --use-title-for-filename --append-id
+```
 ### Python
 ```python
 from pyarxiv import query, download_entries
@@ -41,14 +47,12 @@ titles = map(lambda x: x['title'], entries)
 print(list(titles))
 
 
-
 #download_entries(entries_or_ids_or_uris=[], target_folder='.',
 #                     use_title_for_filename=False, append_id=False,
 #                     progress_callback=(lambda x, y: id))
 download_entries(entries)
-```
 
-```python
+
 entries_with_category = query([ArxivCategory.cs_AI])
-print(arxiv_category_map(ArxivCategory.cs_AI)
+print(arxiv_category_map(ArxivCategory.cs_AI))
 ```
