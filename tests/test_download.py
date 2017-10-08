@@ -1,13 +1,13 @@
-import unittest
 import sys
+import unittest
 
 from pyarxiv import download_entry, download_entries
 
 if sys.version_info >= (3, 3):  # starting python 3.3
-    from unittest.mock import patch, Mock
+    from unittest.mock import patch
 
 else:
-    from mock import patch, Mock
+    from mock import patch
 
 
 class TestDownloadEntry(unittest.TestCase):

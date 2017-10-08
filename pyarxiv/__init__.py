@@ -1,18 +1,18 @@
 """
-Queries arxiv API and downloads papers (the query is a parameter).
-Saves paper data in 'sample/**NUMBER**/data.json'
+Queries and downloads papers from arXiv.org
 """
-import dateutil.parser
-import feedparser
 import os.path
 import re
-import urllib  # todo check python 2
 import sys
+import urllib  # todo check python 2
+
+import dateutil.parser
+import feedparser
+
+from pyarxiv.arxiv_categories import ArxivCategory, arxiv_category_map
 
 ARXIV_DL_BASE_URL = "https://arxiv.org/pdf/"
 ARXIV_API_BASE_URI = 'http://export.arxiv.org/api/query?'
-
-from pyarxiv.arxiv_categories import ArxivCategory, arxiv_category_map
 
 if sys.version_info < (3, 0):
     from urllib import quote_plus
@@ -31,7 +31,8 @@ def retrieve(url, file):
 
 class ArxivQueryError(Exception):
     def __init__(self, message, cause):
-        super(ArxivQueryError, self).__init__(message + u', caused by ' + repr(cause))
+        super(ArxivQueryError, self).__init__(
+            message + u', caused by ' + repr(cause))
         self.cause = cause
 
 
@@ -39,20 +40,28 @@ def query(max_results=100, ids=[], categories=[],
           title='', authors='', abstract='', journal_ref='',
           querystring=''):
     """
+    Queries arXiv.org for papers.
+
     :param max_results: Max number of results, by default 100.
-    :param ids: arXiv ids of entries to be found (ORed together).
+    :type max_results: int
+    :param ids: arXiv ids of entries to be found (OR-ed together).
+    :type ids: List[str]
     :param categories: A valid entry is e.g. ['math.AG', 'cs.AI']
-    to search for papers in Algebraic Geometry and AI.
-    :param title: Restrict search to papers with this string in their title.
-    :param authors: Restrict search with this string in author name(s).
-    :param abstract: Restrict search with this string in abstract.
-    :param journal_ref: Restrict search to e.g. 'Phys Rev Lett'.
-    :param querystring: Simply enter a query string ('manual mode').
-    This query string must be properly escaped as by the arXiv API docs:
-    https://arxiv.org/help/api/user-manual#query_details
-    If this argument is present, all other values,
-    except for max_results and ids are ignored.
-    :return: list of dictionaries of arXiv entries matching query.
+               to search for papers in Algebraic Geometry and AI.
+    :type categories: List[str], List[ArxivCategory]
+    :param str title: Restrict search to papers with this string
+                   in their title.
+    :param str authors: Restrict search with this string in author name(s).
+    :param str abstract: Restrict search with this string in abstract.
+    :param str journal_ref: Restrict search to e.g. 'Phys Rev Lett'.
+    :param str querystring: Simply enter a query string ('manual mode').
+                   This query string must be properly escaped as by the
+                   arXiv API docs:
+                   https://arxiv.org/help/api/user-manual#query_details
+                   If this argument is present, all other values,
+                   except for max_results and ids are ignored.
+    :return: List of dictionaries of arXiv entries matching query.
+    :rtype: List[dict]
     """
     if len(querystring) > 0:
         real_querystring = querystring
@@ -74,19 +83,23 @@ def query(max_results=100, ids=[], categories=[],
         d = feedparser.parse(raw_d)
         return d.entries
     except Exception as e:
-        raise ArxivQueryError('Unable to query paper with query: %s' % query, e)
+        raise ArxivQueryError(
+            'Unable to query paper with query: %s' % query, e)
 
 
 def get_querystring(categories=[], title='', authors='',
                     abstract='', journal_ref=''):
     """
     Helper function for query() builds up a custom search query.
+
     :param categories: categories to be used.
-    :param title: title of papers.
-    :param authors: authors.
-    :param abstract: abstract.
-    :param journal_ref: journal ref.
+    :type categories: List[str], List[ArxivCategory]
+    :param str title: title of papers.
+    :param str authors: authors.
+    :param str abstract: abstract.
+    :param str journal_ref: journal ref.
     :return: Properly escaped search query.
+    :rtype: str
     """
     query_elements = []
     if len(categories) > 0 and isinstance(categories, list):
@@ -113,10 +126,12 @@ def convert_to_native_types(arxiv_entry):
     """
     Replaces all JSON constructs to native Python types.
     Concretely, we
+
     1. Fix whitespace in all fields
     2. Replace 'tags' property with a list of the actual tags
     3. Parse dates in 'published', 'updated' to datetime.datetime objects
-    :param arxiv_entry: dict of arXiv entry
+
+    :param dict arxiv_entry: dict of arXiv entry
     """
     fix_entry_whitespace(arxiv_entry)
     arxiv_entry['tags'] = list(map(lambda x: x['term'], arxiv_entry['tags']))
@@ -130,7 +145,8 @@ def fix_entry_whitespace(arxiv_entry):
     Then deletes duplicate spaces.
     Currently supported fields: title, summary, title_detail.value.
     Dict is modified in-place.
-    :param arxiv_entry: dict containing arXiv entry
+
+    :param dict arxiv_entry: dict containing arXiv entry
     """
     arxiv_entry['title'] = fix_str_whitespace(arxiv_entry['title'])
     arxiv_entry['summary'] = fix_str_whitespace(arxiv_entry['summary'])
@@ -144,8 +160,10 @@ def fix_str_whitespace(string):
     Converts all whitespace to spaces in string.
     Deletes all duplicate spaces in string.
     Then deletes all spaces at start/end of string.
-    :param string: to be modified string
+
+    :param str string: to be modified string
     :return: modified string
+    :rtype: str
     """
     spaces_fixed = re.sub(r'\s+', ' ', string)
     return re.sub(r'^\s|\s$', '', spaces_fixed)
@@ -155,13 +173,17 @@ def get_arxiv_id(url_or_id_or_entry):
     """
     Given an url or an article stub, parse its id and version.
     Examples:
+
     get_arxiv_id('1709.1234v1') -> ('1709.1234', '1')
+
     get_arxiv_id('1709.1234') -> ('1709.1234', None)
+
     :param url_or_id_or_entry: string of url
-    or id of entry (still str)
-    or dict, possibly with 'id' key
-    :return: (str: arxiv id, str: version),
-    or None, None if no valid input
+                               or id of entry (still str)
+                               or dict, possibly with 'id' key
+    :type url_or_id_or_entry: str, dict
+    :return: tuple separating id and version
+    :rtype: (str, str), (str, None), (None, None)
     """
     elem = None
     if isinstance(url_or_id_or_entry, str):
@@ -187,9 +209,10 @@ def get_arxiv_id(url_or_id_or_entry):
 
 def uses_new_id(url_or_id):
     """
-    Read about it here https://arxiv.org/help/arxiv_identifier
-    :param url_or_id: string containing id
-    or full url of arxiv entry
+    Read about arxiv ids here https://arxiv.org/help/arxiv_identifier
+
+    :param str url_or_id: string containing id
+                   or full url of arxiv entry
     :return: bool: whether the id is a new type
     """
     id_version = "" + url_or_id.split('/')[-1]
@@ -200,18 +223,25 @@ def make_filename_safe(filename):
     return "".join([c if c.isalnum() or c in '.' else '_' for c in filename])
 
 
-def download_entry(arxiv_entry_or_id_or_uri=None, target_folder='.', target_filename='',
-                   use_title_for_filename=False, append_id=False):
+def download_entry(arxiv_entry_or_id_or_uri=None,
+                   target_folder='.',
+                   target_filename='',
+                   use_title_for_filename=False,
+                   append_id=False):
     """
-    Downloads an arXiv entry as PDF
+    Downloads an arXiv entry as PDF.
+
     :param arxiv_entry_or_id_or_uri: Paper at hand.
-    :param target_folder: Default is '.'. Can be absolute or relative
-    :param target_filename: Pick file name manually,
-    .pdf is appended automatically.
-    :param use_title_for_filename: Use title as file name
-    will be slower since we have to look up the paper on arXiv.org.
-    Default filename is <id of paper>.pdf.
-    :param append_id: use_title_for_filename is True, you can append the paper id here.
+    :type arxiv_entry_or_id_or_uri: str, dict
+    :param str target_folder: Default is '.'; Can be absolute or relative
+    :param str target_filename: Pick file name manually,
+                   .pdf is appended automatically.
+    :param bool use_title_for_filename: Use title as file name
+                    will be slower since we have to look up the paper
+                    on arXiv.org. Default filename is <id of paper>.pdf.
+    :param bool append_id: if use_title_for_filename is True,
+                    and append_id is True, the paper's arXiv id will be
+                    appended to the filename.
     """
     arxiv_id = get_arxiv_id(arxiv_entry_or_id_or_uri)
     if arxiv_id[0] is None:
@@ -229,7 +259,9 @@ def download_entry(arxiv_entry_or_id_or_uri=None, target_folder='.', target_file
             else:
                 query_result = query(ids=[arxiv_id_str])
                 if len(query_result) < 1:
-                    raise ValueError('Could not find title for paper id \"%s\"' % arxiv_id_str)
+                    raise ValueError(
+                        'Could not find title for paper id '
+                        '\"%s\"' % arxiv_id_str)
                 else:
                     title = query_result[0]['title']
             if append_id:
@@ -240,28 +272,34 @@ def download_entry(arxiv_entry_or_id_or_uri=None, target_folder='.', target_file
             full_filename = make_filename_safe(arxiv_id_str)  # may contain '/'
     full_dl_url = ARXIV_DL_BASE_URL + arxiv_id_str + ".pdf"
     if os.path.isdir(target_folder):
-        retrieve(full_dl_url, os.path.join(target_folder, full_filename + '.pdf'))
+        retrieve(full_dl_url, os.path.join(
+            target_folder, full_filename + '.pdf'))
     else:
-        raise ValueError('Directory %s does not exist, cannot download paper' % target_folder)
+        raise ValueError(
+            'Directory %s does not exist, '
+            'cannot download paper' % target_folder)
 
 
 def download_entries(entries_or_ids_or_uris=[], target_folder='.',
                      use_title_for_filename=False, append_id=False,
                      progress_callback=(lambda x, y: id)):
     """
-    Download multiple entries at once. Will catch ValueErrors silently
+    Download multiple entries at once. Will catch ValueErrors silently.
+
     :param entries_or_ids_or_uris: ids to download
-    :param target_folder: default is '.'.
-    :param use_title_for_filename: If True, will query for each paper.
-    :param append_id: If use_title_for_filename,
-    will append each paper's id to its filename
+    :type entries_or_ids_or_uris: List[str], List[dict]
+    :param str target_folder: default is '.'.
+    :param bool use_title_for_filename: If True, will query for each paper.
+    :param bool append_id: If use_title_for_filename,
+                    will append each paper's id to its filename
     :param progress_callback: called when each paper is done downloading.
-    Signature of progress_callback is progress_callback(element,
-                                                        maybe_exception)
-    element is the id/entry/uri that was just downloaded,
-    maybe_exception is either None or a caught ValueError, depending on
-    whether the method error'd or not
+               Signature of progress_callback is
+               progress_callback(element, maybe_exception)
+               element is the id/entry/uri that was just downloaded,
+               maybe_exception is either None or a caught ValueError,
+               depending on whether the method error'd or not
     :return: list of all exceptions thrown
+    :rtype: List[ValueError]
     """
     exceptions = []
     for e in entries_or_ids_or_uris:

@@ -1,5 +1,5 @@
-import unittest
 import sys
+import unittest
 
 import pyarxiv as paq
 from pyarxiv.arxiv_categories import ArxivCategory
