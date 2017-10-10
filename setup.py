@@ -2,14 +2,14 @@
 
 from distutils.core import setup
 
-with open('README.md') as readme_file:
+with open('README.rst') as readme_file:
     readme = readme_file.read()
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(name='pyarxiv',
-      version='1.0',
+      version='1.0.3',
       install_requires=requirements,
       classifiers=[
         'Intended Audience :: Developers',
@@ -27,7 +27,7 @@ setup(name='pyarxiv',
         'Environment :: Console'
       ],
       description='Python Client Library and CLI client for the ArXiv.org API',
-      long_description="See source on GitHub: https://github.com/culshoefer/pyarxiv\n" + readme,
+      long_description="See source on GitHub: https://github.com/culshoefer/pyarxiv\n\n" + readme,
       author='Christoph Ulshoefer',
       license='MIT',
       author_email='c@culshoefer.com',
