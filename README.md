@@ -8,7 +8,7 @@ Supports Python 2.7, 3.3-3.6+
 
 ## Installation
 ```sh
-# TODO
+pip install pyarxiv
 ```
 
 ## Features
